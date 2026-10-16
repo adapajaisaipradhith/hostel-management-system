@@ -1,0 +1,21 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Run Hostel Management Flask App",
+			"type": "shell",
+			"command": "./.venv/bin/flask",
+			"args": [
+				"--app",
+				"run.py",
+				"run",
+				"--debug",
+				"--port",
+				"5001"
+			],
+			"isBackground": true,
+			"problemMatcher": [],
+			"group": "build"
+		}
+	]
+}

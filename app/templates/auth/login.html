@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Sign in | Hostel Management{% endblock %}
+{% block public_content %}
+<main class="login-layout">
+  <section class="login-art"><div class="login-art-label">RESIDENTIAL SERVICES</div><h1>Carefully run.<br>Clearly accounted.</h1><p>Hostel operations in one place.</p><div class="art-index">ADMINISTRATION / 01</div></section>
+  <section class="login-panel"><div class="login-box"><div class="eyebrow">HOSTEL MANAGEMENT SYSTEM</div><h2>Sign in</h2><p class="muted">Use your assigned account to continue.</p>
+    <form method="post" action="{{ url_for('auth.login') }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <label for="username">Username or email</label><input class="form-control" id="username" name="username" required autocomplete="username" maxlength="254">
+      <label for="password">Password</label><input class="form-control" id="password" name="password" type="password" required autocomplete="current-password">
+      <button class="btn btn-primary w-100 mt-4" type="submit">Sign in</button>
+    </form>
+    <p class="login-foot">Access is managed by your hostel administrator.</p>
+  </div></section>
+</main>
+{% endblock %}

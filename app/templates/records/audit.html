@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block title %}Audit log | Hostel Management{% endblock %}
+{% block content %}
+<section class="page-heading"><div><div class="eyebrow">SECURITY & ACCOUNTABILITY</div><h1>Audit log</h1><p>Administrative actions recorded by the system. Avoid storing secrets or unnecessary personal data in event details.</p></div></section>
+<section class="content-section"><div class="table-responsive"><table class="table"><thead><tr><th>When</th><th>User</th><th>Action</th><th>Record</th><th>Record ID</th><th>Details</th></tr></thead><tbody>{% for entry in logs %}<tr><td>{{ entry.occurred_at }}</td><td>{{ entry.username or 'System' }}</td><td>{{ entry.action }}</td><td>{{ entry.entity_type }}</td><td>{{ entry.entity_id or '—' }}</td><td>{{ entry.details or '—' }}</td></tr>{% else %}<tr><td colspan="6" class="empty-state">No audit events yet.</td></tr>{% endfor %}</tbody></table></div><p>Page {{ page }} · <a href="?page={{ page + 1 }}">Next page</a></p></section>
+{% endblock %}

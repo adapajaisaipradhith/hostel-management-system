@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block title %}Notifications | Hostel Management{% endblock %}
+{% block content %}
+<section class="page-heading"><div><div class="eyebrow">INBOX</div><h1>Notifications</h1><p>Updates addressed to your account.</p></div></section>
+<section class="content-section">{% for item in notifications %}<article class="notification-row"><div class="d-flex justify-content-between gap-3"><strong>{{ item.title }}</strong><small>{{ item.created_at }}</small></div><p class="mb-2">{{ item.body }}</p>{% if not item.read_at %}<form method="post" action="{{ url_for('records.mark_notification_read', notification_id=item.notification_id) }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn btn-sm btn-outline-success">Mark read</button></form>{% else %}<small>Read {{ item.read_at }}</small>{% endif %}</article>{% else %}<p class="empty-state">You have no notifications.</p>{% endfor %}</section>
+{% endblock %}

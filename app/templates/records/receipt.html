@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block title %}Receipt {{ payment.receipt_number }} | Hostel Management{% endblock %}
+{% block content %}
+<section class="page-heading"><div><div class="eyebrow">MANUAL PAYMENT RECEIPT</div><h1>{{ payment.receipt_number }}</h1><p>Payment status: {{ payment.status|title }}</p></div><button class="btn btn-outline-success align-self-center" onclick="window.print()">Print receipt</button></section>
+<section class="content-section receipt-sheet"><dl class="row"><dt class="col-sm-3">Student</dt><dd class="col-sm-9">{{ payment.student_number }} · {{ payment.first_name }} {{ payment.last_name }}</dd><dt class="col-sm-3">Amount</dt><dd class="col-sm-9">{{ '%.2f'|format(payment.amount) }}</dd><dt class="col-sm-3">Received at</dt><dd class="col-sm-9">{{ payment.received_at }}</dd><dt class="col-sm-3">Method</dt><dd class="col-sm-9">{{ payment.method|replace('_',' ')|title }}</dd><dt class="col-sm-3">Reference</dt><dd class="col-sm-9">{{ payment.reference or '—' }}</dd><dt class="col-sm-3">Applied invoices</dt><dd class="col-sm-9">{{ payment.invoices or '—' }}</dd></dl><p class="muted">This is a record of a manually entered payment. It is not confirmation from a payment gateway.</p></section>
+{% endblock %}

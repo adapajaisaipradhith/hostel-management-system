@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Overview | Hostel Management{% endblock %}
+{% block content %}
+<section class="page-heading"><div><div class="eyebrow">HOSTEL OPERATIONS</div><h1>Overview</h1><p>Live summaries calculated from MySQL records. Availability and attendance are for the selected date; physical occupants are current.</p></div><form class="d-flex align-items-end gap-2" method="get" action="{{ url_for('dashboard.index') }}"><div><label class="form-label" for="dashboard-date">Report date</label><input class="form-control" id="dashboard-date" name="date" type="date" value="{{ selected_date }}" required></div><button class="btn btn-outline-success" type="submit">Apply</button></form></section>
+<section class="metric-grid" aria-label="Hostel summary">
+  {% if 'Super Admin' in g.current_roles or 'Warden' in g.current_roles %}
+  <article class="metric"><span>Physical occupants now</span><strong>{{ summary.physical_occupied }}</strong><small>Checked in, not actually checked out</small></article>
+  <article class="metric"><span>Available on selected date</span><strong>{{ summary.available_today }}</strong><small>Not occupied now, scheduled, or held on {{ selected_date }}</small></article>
+  <article class="metric"><span>Scheduled on selected date</span><strong>{{ summary.scheduled_today }}</strong><small>Reservation interval includes {{ selected_date }}</small></article>
+  <article class="metric"><span>Maintenance on selected date</span><strong>{{ summary.maintenance_today }}</strong><small>Active holds include {{ selected_date }}</small></article>
+  <article class="metric"><span>Reservations after selected date</span><strong>{{ summary.reserved_future }}</strong><small>Starts after {{ selected_date }}</small></article>
+  <article class="metric"><span>Pending leave requests</span><strong>{{ pending_leave }}</strong><small>Awaiting staff review</small></article>
+  <article class="metric"><span>Open complaints</span><strong>{{ open_complaints }}</strong><small>Open or in progress</small></article>
+  {% endif %}
+  {% if finance_summary %}<article class="metric"><span>Outstanding fees</span><strong>{{ '%.2f'|format(finance_summary.outstanding) }}</strong><small>Posted invoice balances</small></article><article class="metric"><span>Posted invoices</span><strong>{{ finance_summary.invoices }}</strong><small>Current ledger records</small></article>{% endif %}
+  {% if attendance_summary %}<article class="metric"><span>Attendance on selected date</span><strong>{{ attendance_summary.marked }}</strong><small>{{ attendance_summary.present }} marked present</small></article>{% endif %}
+</section>
+{% if chart.labels %}<section class="content-section"><div class="section-title"><div><div class="eyebrow">CAPACITY</div><h2>Physical occupancy by block</h2></div></div><div class="chart-wrap"><canvas id="occupancy-chart" data-chart='{{ chart|tojson }}' aria-label="Occupied beds compared with total beds by block" role="img"></canvas></div></section>{% endif %}
+{% if stock_alerts %}<section class="content-section"><div class="section-title"><div><div class="eyebrow">MESS INVENTORY</div><h2>Items at or below reorder level</h2></div></div><div class="table-responsive"><table class="table"><thead><tr><th>Item</th><th>Current stock</th><th>Reorder level</th><th>Unit</th></tr></thead><tbody>{% for item in stock_alerts %}<tr><td>{{ item.item_name }}</td><td>{{ item.stock }}</td><td>{{ item.reorder_level }}</td><td>{{ item.unit_name }}</td></tr>{% endfor %}</tbody></table></div></section>{% endif %}
+{% if recent_audit %}<section class="content-section"><div class="section-title"><div><div class="eyebrow">AUDIT TRAIL</div><h2>Recent activity</h2></div></div><div class="table-responsive"><table class="table align-middle"><thead><tr><th>Action</th><th>Record type</th><th>By</th><th>When</th></tr></thead><tbody>{% for item in recent_audit %}<tr><td>{{ item.action }}</td><td>{{ item.entity_type }}</td><td>{{ item.username or 'System' }}</td><td>{{ item.occurred_at }}</td></tr>{% endfor %}</tbody></table></div></section>{% endif %}
+{% endblock %}
