@@ -472,11 +472,15 @@ def test_mysql_user_management_and_password_reset(mysql_app):
     with client.session_transaction() as session:
         session["user_id"] = admin_id
         session["session_version"] = 0
-    response = client.post(f"/users/{managed_id}/status", data={"csrf_token": csrf})
+    admin_page = client.get("/users")
+    admin_token = re.search(rb'<input[^>]*name="csrf_token"[^>]*value="([^"]+)"', admin_page.data)
+    assert admin_token is not None
+    admin_csrf = admin_token.group(1).decode()
+    response = client.post(f"/users/{managed_id}/status", data={"csrf_token": admin_csrf})
     assert response.status_code == 302
     with mysql_app.app_context():
         assert mysql_scalar("SELECT is_active FROM users WHERE user_id=%s", (managed_id,)) == 0
-    response = client.post(f"/users/{managed_id}/status", data={"csrf_token": csrf})
+    response = client.post(f"/users/{managed_id}/status", data={"csrf_token": admin_csrf})
     assert response.status_code == 302
     with mysql_app.app_context():
         assert mysql_scalar("SELECT is_active FROM users WHERE user_id=%s", (managed_id,)) == 1
